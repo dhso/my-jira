@@ -40,7 +40,7 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-const domain = 'http://34.92.41.110:8082'
+import configs from '@/configs'
 
 export default {
   name: 'my-overtime',
@@ -65,14 +65,12 @@ export default {
       datetime: [{ required: true, type: 'string', message: '请输入加班时间', trigger: 'blur' }]
     }
   },
-  mounted() {},
   methods: {
     viewChageHandler(viewData) {
       this.viewData = viewData
       this.getOvertimeRecords(true)
     },
     dayClickHander(event) {
-      console.log(event)
       const currentSelectedDatetime = this.$dayjs()
         .set('date', this.$dayjs(event).get('date'))
         .format('YYYY-MM-DDTHH:mm')
@@ -81,7 +79,7 @@ export default {
     },
     async getOvertimeRecords(onlyMe) {
       this.isLoading = true
-      const url = onlyMe ? `${domain}/api/overtimerecord/user/${this.currentUser.name}` : `${domain}/api/overtimerecord/`
+      const url = onlyMe ? `${configs.PATSNAP_OVERTIME_RECORD_API}/user/${this.currentUser.name}` : `${configs.PATSNAP_OVERTIME_RECORD_API}/`
       try {
         const { firstCellDate, lastCellDate } = this.viewData
         this.overTimeRecords = await this.$http.get(url, { params: { from: firstCellDate, to: lastCellDate } })
@@ -112,7 +110,7 @@ export default {
       this.$refs.overtimeForm.validate(async valid => {
         if (!valid) return false
         this.isLoading = true
-        const url = `${domain}/api/overtimerecord/`
+        const url = `${configs.PATSNAP_OVERTIME_RECORD_API}/`
         try {
           await this.$http.post(url, { createDate: this.overtimeForm.datetime, user: { email: this.currentUser.emailAddress } })
           this.getOvertimeRecords(true)
@@ -131,10 +129,17 @@ export default {
 <style lang="scss">
 .my-overtime {
   .vuecal {
+    color: #333;
     height: calc(100vh - 70px);
   }
   .vuecal__title {
-    background-color: #fff;
+    background-color: transparent;
+    font-weight: 600;
+  }
+  .vuecal__arrow {
+    &:hover {
+      color: #409eff;
+    }
   }
   .vuecal__heading {
     border-top: 1px solid #ddd;

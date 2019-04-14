@@ -11,7 +11,6 @@
           type="primary"
           size="mini"
           v-for="transition in transitionsList"
-          :disabled="issue.fields.status.name === transition.name"
           :key="transition.id"
           @click="transitionHandler(transition)"
         >
@@ -102,7 +101,6 @@ export default {
     async getTransitionsList() {
       const { transitions } = await this.$jira.listTransitions(this.issue.key)
       this.transitionsList = transitions
-      console.log(this.transitionsList)
     },
     worklogFormOpen() {
       this.$set(this.worklogForm, 'timeSpent', '1d')
@@ -130,11 +128,6 @@ export default {
       this.$message.success('Transition issue success.')
       this.$events.emit('my-issues:close-issue-detail')
       this.isTransitionLoading = false
-    }
-  },
-  watch: {
-    issue: (nVal, oVal) => {
-      console.log(nVal, oVal)
     }
   }
 }

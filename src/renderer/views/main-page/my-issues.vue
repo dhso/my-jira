@@ -4,7 +4,7 @@
       <el-breadcrumb-item>Issues</el-breadcrumb-item>
       <el-breadcrumb-item>{{ issueStatus }}</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-table :data="issuesData && issuesData.issues" border stripe v-loading="isLoading" row-key="key" @row-click="rowClick">
+    <el-table :data="issuesData && issuesData.issues" border stripe v-loading="isLoading" row-key="key" @row-click="rowClick" height="calc(100vh - 150px)">
       <el-table-column type="index" fixed> </el-table-column>
       <el-table-column label="Key" width="100" fixed>
         <template slot-scope="scope">
@@ -15,6 +15,19 @@
       <el-table-column prop="fields.timetracking.originalEstimate" label="Original Estimate" width="120"> </el-table-column>
       <el-table-column prop="fields.timetracking.remainingEstimate" label="Remaining Estimate" width="130"> </el-table-column>
     </el-table>
+    <div class="issue-table-pagination">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :current-page="issuesData && Math.ceil((issuesData.startAt + 1) / issuesData.maxResults)"
+        :total="issuesData && issuesData.total"
+        :page-size="issuesData && issuesData.maxResults"
+        @current-change="currentChangeHandler"
+        @prev-click="currentChangeHandler"
+        @next-click="currentChangeHandler"
+      >
+      </el-pagination>
+    </div>
     <div :class="['drawer', { 'drawer-show': showDrawer }]" @click.self="showDrawer = !showDrawer">
       <div class="drawer-container">
         <div v-if="selectedRow">
@@ -45,7 +58,6 @@ export default {
   },
   created() {
     console.log('my issues')
-    console.log(this)
     this.$events.on('my-issues:reload', this.getIssues)
     this.$events.on('my-issues:close-issue-detail', () => {
       this.showDrawer = false
@@ -55,7 +67,7 @@ export default {
     this.getIssues()
   },
   methods: {
-    async getIssues() {
+    async getIssues(startAt = 0, maxResults = 20) {
       this.isLoading = true
       const { issueStatus } = this.$route.query
       this.issueStatus = issueStatus
@@ -76,28 +88,45 @@ export default {
         'customfield_11959',
         'issuelinks'
       ]
-      this.issuesData = await this.$jira.searchJira(JQl, {
-        maxResults: 10,
-        fields
-      })
-      console.log(this.issuesData)
-
-      this.isLoading = false
+      try {
+        this.issuesData = await this.$jira.searchJira(JQl, {
+          maxResults,
+          startAt,
+          fields
+        })
+        // console.log(this.issuesData)
+      } catch (err) {
+        console.log(err)
+        this.$message.error(err)
+      } finally {
+        this.isLoading = false
+      }
     },
     rowClick(row, column, event) {
-      console.log(row)
       this.showDrawer = true
       this.selectedRow = row
+    },
+    currentChangeHandler(page) {
+      this.getIssues((page - 1) * this.issuesData.maxResults)
     }
   },
   watch: {
-    $route: 'getIssues'
+    $route: function() {
+      this.issuesData = null
+      this.getIssues()
+    }
   }
 }
 </script>
 
 <style lang="scss">
 .my-dashboard {
+  .issue-table-pagination {
+    margin-top: 32px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 2px;
+  }
   .drawer {
     z-index: 2001;
     position: absolute;

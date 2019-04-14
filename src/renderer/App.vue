@@ -6,7 +6,37 @@
 
 <script>
 export default {
-  name: 'my-jira'
+  name: 'my-jira',
+  mounted() {
+    const { ipcRenderer } = this.$electron
+    // update available
+    ipcRenderer.on('updater:event:update-available', () => {
+      this.$confirm('发现新版本, 是否升级?', '升级提示', {
+        confirmButtonText: '升级',
+        cancelButtonText: '暂不',
+        type: 'warning'
+      }).then(() => {
+        ipcRenderer.send('updater:method:downloadUpdate')
+      })
+    })
+    // updater downloading
+    ipcRenderer.on('updater:event:update-downloading', meta => {
+      this.$notify.info({ title: '升级', message: '正在下载升级包，请耐心等待.' })
+    })
+    // updater downloading
+    ipcRenderer.on('updater:event:update-downloaded', meta => {
+      this.$notify.info({ title: '升级', message: '升级包下载完成,准备安装.' })
+      setTimeout(() => {
+        ipcRenderer.send('updater:method:quitAndInstal')
+      }, 1000)
+    })
+    // updater error
+    ipcRenderer.on('updater:event:error', error => {
+      this.$notify.error({ title: '升级', message: error })
+    })
+    // updater checkForUpdates
+    ipcRenderer.send('updater:method:checkForUpdates')
+  }
 }
 </script>
 

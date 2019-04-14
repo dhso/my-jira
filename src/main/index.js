@@ -1,5 +1,5 @@
 const path = require('path')
-const { app, BrowserWindow, Menu, shell } = require('electron')
+const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron')
 const updater = require('electron-simple-updater')
 const { isDarwin } = require('./utils')
 const config = require('./config')
@@ -55,7 +55,7 @@ function createMainWindow() {
     alwaysOnTop: config.get('alwaysOnTop'),
     autoHideMenuBar: config.get('autoHideMenuBar'),
     backgroundColor: '#f2f2f2',
-    icon: path.join(__dirname, '../../build/icons/256x256.png')
+    icon: path.join(__dirname, '../../icons/256x256.png')
   })
 
   if (isDarwin) {
@@ -83,18 +83,51 @@ function createMainWindow() {
 }
 
 app.on('ready', () => {
+  // set menu
   Menu.setApplicationMenu(appMenu)
+
+  // open url in external
   const { webContents } = (mainWindow = createMainWindow())
-  webContents.on('dom-ready', () => {
-    // webContents.insertCSS(fs.readFileSync(path.join(__dirname, './index.css'), 'utf8'))
-  })
   webContents.on('new-window', (e, url) => {
     e.preventDefault()
     shell.openExternal(url)
   })
+
+  // updater init
   updater.init({
-    checkUpdateOnStart: true,
+    checkUpdateOnStart: false,
     autoDownload: false
+  })
+
+  // updater event
+  updater.on('error', err => {
+    webContents.send('updater:event:error', err)
+  })
+  updater.on('checking-for-update', () => {
+    webContents.send('updater:event:checking-for-update')
+  })
+  updater.on('update-available', meta => {
+    webContents.send('updater:event:update-available', meta)
+  })
+  updater.on('update-not-available', () => {
+    webContents.send('updater:event:update-not-available')
+  })
+  updater.on('update-downloading', meta => {
+    webContents.send('updater:event:update-downloading', meta)
+  })
+  updater.on('update-downloaded', meta => {
+    webContents.send('updater:event:update-downloaded', meta)
+  })
+
+  // updater action
+  ipcMain.on('updater:method:checkForUpdates', () => {
+    updater.checkForUpdates()
+  })
+  ipcMain.on('updater:method:downloadUpdate', () => {
+    updater.downloadUpdate()
+  })
+  ipcMain.on('updater:method:quitAndInstall', () => {
+    updater.quitAndInstall()
   })
 })
 
@@ -108,25 +141,3 @@ app.on('before-quit', () => {
     config.set('windowState', mainWindow.getBounds())
   }
 })
-
-app.on('ready', () => {})
-
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
-import { autoUpdater } from 'electron-updater'
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
- */

@@ -75,32 +75,39 @@ export default {
   async created() {
     console.log('main page')
     try {
+      // 初始化jira
       const { username, password, fullHost } = this.$stores.get('system.loginInfo')
       const [protocol, host] = fullHost.split('://')
-      // this.$jira = new JiraApi({ protocol, host, username, password, apiVersion: '2', strictSSL: true })
       this.$initJira(protocol, host, username, password)
+      // 校验用户
       this.loadingText = '校验用户中'
       this.isLoading = true
-      const currentUser = await this.$jira.getCurrentUser()
+      this.currentUser = await this.$jira.getCurrentUser()
       this.loadingText = '校验成功'
-      this.currentUser = currentUser
-      this.$stores.set('current.user', currentUser)
+      // 存储当前用户
+      this.$stores.set('current.user', this.currentUser)
     } catch (err) {
       console.log(err)
       this.loadingText = '校验失败'
       this.$message.error(`${err.statusCode}:${err.name}`)
-      this.$router.replace({ name: 'login-page' })
+      // 跳转登录
+      this.gotoLoginPage()
     } finally {
       setTimeout(() => {
-        this.loadingText = null
         this.isLoading = false
+        this.loadingText = null
       }, 200)
     }
   },
   methods: {
     logoutHandler() {
+      // 清除缓存
       this.$stores.clear()
       this.$message.info('已清除缓存，成功退出')
+      // 跳转登录
+      this.gotoLoginPage()
+    },
+    gotoLoginPage() {
       this.$router.replace({ name: 'login-page' })
     }
   }
@@ -135,7 +142,8 @@ export default {
     position: relative;
     flex: 1;
     height: 100vh;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 16px;
     & > .el-breadcrumb {
       margin-bottom: 20px;
