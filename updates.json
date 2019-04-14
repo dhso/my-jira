@@ -1,7 +1,0 @@
-{
-  "darwin-x64-prod": {
-    "update": "https://github.com/dhso/my-jira/releases/download/darwin-x64-prod-v0.0.2/release.json",
-    "install": "https://github.com/dhso/my-jira/releases/download/darwin-x64-prod-v0.0.2/My.Jira-0.0.2.dmg",
-    "version": "0.0.2"
-  }
-}
