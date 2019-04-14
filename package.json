@@ -1,7 +1,7 @@
 {
   "name": "my-jira",
   "productName": "My Jira",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "author": "donghao@patsnap.com",
   "description": "A lite jira desktop",
   "homepage": "http://blog.minws.com",
@@ -15,7 +15,7 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "npm run lint:fix",
-    "build": "node .electron-vue/build.js && electron-builder",
+    "build:all": "node .electron-vue/build.js && electron-builder -mwl --x64",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -25,17 +25,22 @@
     "build:dir:mac": "node .electron-vue/build.js && electron-builder --dir --mac --x64",
     "build:dir:linux": "node .electron-vue/build.js && electron-builder --dir --linux --x64",
     "build:dir:win": "node .electron-vue/build.js && electron-builder --dir --win --x64",
-    "publish": "publish",
-    "release": "npm run build && publish -p build"
+    "release": "npm run build:all && publish all -p build -d"
   },
   "build": {
     "productName": "My Jira",
     "appId": "com.minws.jira",
+    "appImage": {
+      "systemIntegration": "doNotAsk"
+    },
     "directories": {
       "output": "build"
     },
     "files": [
-      "dist/electron/**/*"
+      "dist/electron/**/*",
+      "!publisher.json",
+      "!README.md",
+      "!updates.json"
     ],
     "dmg": {
       "contents": [
@@ -54,14 +59,18 @@
     },
     "mac": {
       "icon": "icons/icon.icns",
-      "target": "dmg"
+      "category": "public.app-category.developer-tools"
     },
     "win": {
       "icon": "icons/icon.ico",
       "target": "squirrel"
     },
     "linux": {
-      "icon": "icons/"
+      "icon": "icons/",
+      "category": "Development"
+    },
+    "squirrelWindows": {
+      "iconUrl": "https://raw.githubusercontent.com/dhso/my-jira/master/icons/icon.ico"
     }
   },
   "updater": {
@@ -106,6 +115,7 @@
     "devtron": "^1.4.0",
     "electron": "^4.1.4",
     "electron-builder": "^20.39.0",
+    "electron-builder-squirrel-windows": "^20.40.0",
     "electron-debug": "^2.2.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-simple-publisher": "^0.6.2",

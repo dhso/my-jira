@@ -144,6 +144,11 @@ export default {
   .vuecal__heading {
     border-top: 1px solid #ddd;
   }
+  .vuecal__cell {
+    &.today {
+      background-color: rgb(225, 243, 216);
+    }
+  }
   .vuecal__cell--has-events {
     background-color: rgb(217, 236, 255);
   }
