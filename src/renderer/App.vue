@@ -27,7 +27,7 @@ export default {
     ipcRenderer.on('updater:event:update-downloaded', meta => {
       this.$notify.info({ title: '升级', message: '升级包下载完成,准备安装.' })
       setTimeout(() => {
-        ipcRenderer.send('updater:method:quitAndInstal')
+        ipcRenderer.send('updater:method:quitAndInstall')
       }, 1000)
     })
     // updater error
