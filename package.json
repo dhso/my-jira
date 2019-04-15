@@ -89,7 +89,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "vue": "^2.6.10",
-    "vue-cal": "^1.50.1",
+    "vue-cal": "^1.47.0",
     "vue-electron": "^1.0.6",
     "vue-events": "^3.1.0",
     "vue-router": "^3.0.5",

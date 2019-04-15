@@ -10,7 +10,7 @@
       hide-view-selector
       :disable-views="['years', 'year', 'week', 'day']"
       :events="overTimeRecords"
-      :startWeekOnSunday="true"
+      start-week-on-sunday
       @ready="viewChageHandler"
       @view-change="viewChageHandler"
       @day-click="dayClickHander"
@@ -20,7 +20,9 @@
       </template>
       <template v-slot:cell-content="{ cell, view, events }">
         {{ cell.formattedDate.split('-')[2] }}
-        <p class="cell-content-event">{{ events[0] && events[0].title }}</p>
+        <p class="cell-content-event">
+          {{ events[0] && events[0].title }}
+        </p>
       </template>
     </full-calendar>
     <el-dialog title="加班打卡" :visible.sync="overtimeDialogVisible" width="400px" center :modal-append-to-body="false">
@@ -30,8 +32,12 @@
         </el-form-item>
       </el-form>
       <template v-slot:footer>
-        <el-button @click="overtimeDialogVisible = false">取 消</el-button>
-        <el-button type="primary" :loading="isLoading" @click="logOvertimeDatetimeHandler">打 卡</el-button>
+        <el-button @click="overtimeDialogVisible = false">
+          取 消
+        </el-button>
+        <el-button type="primary" :loading="isLoading" @click="logOvertimeDatetimeHandler">
+          打 卡
+        </el-button>
       </template>
     </el-dialog>
   </div>

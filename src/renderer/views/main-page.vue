@@ -26,7 +26,7 @@
           <el-button type="danger" class="avatar-popover-logout" @click="logoutHandler">
             Logout
           </el-button>
-          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']" />
+          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']">
         </el-popover>
       </div>
       <main-menus />
