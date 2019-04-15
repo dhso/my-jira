@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
   name: 'my-jira',
+  data() {
+    return {}
+  },
   mounted() {
     const { ipcRenderer } = this.$electron
     // update available
@@ -21,10 +24,12 @@ export default {
     })
     // updater downloading
     ipcRenderer.on('updater:event:update-downloading', meta => {
+      console.log(meta)
       this.$notify.info({ title: '升级', message: '正在下载升级包，请耐心等待.' })
     })
     // updater downloading
     ipcRenderer.on('updater:event:update-downloaded', meta => {
+      console.log(meta)
       this.$notify.info({ title: '升级', message: '升级包下载完成,准备安装.' })
       setTimeout(() => {
         ipcRenderer.send('updater:method:quitAndInstall')

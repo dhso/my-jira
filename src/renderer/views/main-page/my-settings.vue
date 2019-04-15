@@ -1,5 +1,8 @@
 <template>
-  <div class="my-settings" v-loading.fullscreen.lock="isLoading">
+  <div
+    v-loading.fullscreen.lock="isLoading"
+    class="my-settings"
+  >
     <el-breadcrumb separator="/">
       <el-breadcrumb-item>App</el-breadcrumb-item>
       <el-breadcrumb-item>Settings</el-breadcrumb-item>
@@ -19,8 +22,7 @@ export default {
   created() {
     console.log('my settings')
     this.currentUser = this.$stores.get('current.user')
-  },
-  methods: {}
+  }
 }
 </script>
 

@@ -1,18 +1,18 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
+    parser: 'babel-eslint',
     sourceType: 'module'
   },
   env: {
     browser: true,
     node: true
   },
-  extends: 'standard',
+  extends: ['eslint:recommended', 'plugin:vue/recommended'],
   globals: {
     __static: true
   },
-  plugins: ['html'],
+  plugins: ['vue'],
   rules: {
     // allow paren-less arrow functions
     'arrow-parens': 0,
@@ -20,6 +20,9 @@ module.exports = {
     'generator-star-spacing': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'space-before-function-paren': 0
+    'no-console': 0,
+    'no-unused-vars': ['error', { args: 'none' }],
+    'vue/max-attributes-per-line': 0,
+    'vue/name-property-casing': 0
   }
 }

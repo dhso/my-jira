@@ -1,5 +1,5 @@
 <template>
-  <div class="main-page" v-loading="isLoading" :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.8)">
+  <div v-loading="isLoading" class="main-page" :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="side-bar">
       <div class="my-avatar">
         <el-popover :disabled="!currentUser" placement="right" trigger="hover" width="400">
@@ -23,47 +23,26 @@
               <span class="avatar-popover-text">{{ currentUser.active }}</span>
             </el-form-item>
           </el-form>
-          <el-button type="danger" class="avatar-popover-logout" @click="logoutHandler">Logout</el-button>
-          <img :src="currentUser && currentUser.avatarUrls['48x48']" slot="reference" />
+          <el-button type="danger" class="avatar-popover-logout" @click="logoutHandler">
+            Logout
+          </el-button>
+          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']" />
         </el-popover>
       </div>
-      <el-menu :collapse="isCollapse" default-active="1" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" class="side-menus" :router="true">
-        <el-menu-item index="1" :route="{ name: 'my-dashboard' }">
-          <i class="el-icon-menu"></i>
-          <span slot="title">面板</span>
-        </el-menu-item>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span slot="title">导航一</span>
-          </template>
-          <el-menu-item-group>
-            <span slot="title">Issues</span>
-            <el-menu-item index="2-1" :route="{ name: 'my-issues', query: { issueStatus: 'TBD' } }">TBD</el-menu-item>
-            <el-menu-item index="2-2" :route="{ name: 'my-issues', query: { issueStatus: 'In Development' } }">In Development</el-menu-item>
-            <el-menu-item index="2-3" :route="{ name: 'my-issues', query: { issueStatus: 'Done' } }">Done</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="Bugs">
-            <el-menu-item index="2-4" :route="{ name: 'my-issues', query: { issueStatus: 'Open' } }">Open</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-menu-item index="3" :route="{ name: 'my-overtime' }">
-          <i class="el-icon-date"></i>
-          <span slot="title">Overtime</span>
-        </el-menu-item>
-        <!-- <el-menu-item index="4" :route="{ name: 'my-settings' }">
-          <i class="el-icon-setting"></i>
-          <span slot="title">设置</span>
-        </el-menu-item> -->
-      </el-menu>
+      <main-menus />
     </div>
-    <router-view class="view-container"></router-view>
+    <router-view class="view-container" />
   </div>
 </template>
 
 <script>
+import MainMenus from '@/components/main-menus'
+
 export default {
   name: 'main-page',
+  components: {
+    'main-menus': MainMenus
+  },
   data() {
     return {
       isCollapse: true,

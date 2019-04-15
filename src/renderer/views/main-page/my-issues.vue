@@ -4,16 +4,19 @@
       <el-breadcrumb-item>Issues</el-breadcrumb-item>
       <el-breadcrumb-item>{{ issueStatus }}</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-table :data="issuesData && issuesData.issues" border stripe v-loading="isLoading" row-key="key" @row-click="rowClick" height="calc(100vh - 150px)">
-      <el-table-column type="index" fixed> </el-table-column>
+    <el-table v-loading="isLoading" :data="issuesData && issuesData.issues" border stripe row-key="key" height="calc(100vh - 130px)" @row-click="rowClick">
+      <el-table-column type="index" fixed />
       <el-table-column label="Key" width="100" fixed>
         <template slot-scope="scope">
-          <el-button size="mini" type="text">{{ scope.row.key }}</el-button>
+          <el-button size="mini" type="text">
+            {{ scope.row.key }}
+          </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="fields.summary" label="Summary"> </el-table-column>
-      <el-table-column prop="fields.timetracking.originalEstimate" label="Original Estimate" width="120"> </el-table-column>
-      <el-table-column prop="fields.timetracking.remainingEstimate" label="Remaining Estimate" width="130"> </el-table-column>
+      <el-table-column prop="fields.summary" label="Summary" />
+      <el-table-column prop="fields.status.name" label="Status" width="130" />
+      <el-table-column prop="fields.timetracking.originalEstimate" label="Original Estimate" width="120" />
+      <el-table-column prop="fields.timetracking.remainingEstimate" label="Remaining Estimate" width="130" />
     </el-table>
     <div class="issue-table-pagination">
       <el-pagination
@@ -25,13 +28,12 @@
         @current-change="currentChangeHandler"
         @prev-click="currentChangeHandler"
         @next-click="currentChangeHandler"
-      >
-      </el-pagination>
+      />
     </div>
     <div :class="['drawer', { 'drawer-show': showDrawer }]" @click.self="showDrawer = !showDrawer">
       <div class="drawer-container">
         <div v-if="selectedRow">
-          <issue-detail :issue="selectedRow" :key="selectedRow.key" />
+          <issue-detail :key="selectedRow.key" :issue="selectedRow" />
         </div>
       </div>
     </div>
@@ -42,7 +44,7 @@
 import IssueDetail from '@/components/issue-detail'
 
 export default {
-  name: 'my-dashboard',
+  name: 'my-issues',
   components: {
     'issue-detail': IssueDetail
   },
@@ -54,6 +56,12 @@ export default {
       issueStatus: null,
       showDrawer: false,
       selectedRow: null
+    }
+  },
+  watch: {
+    $route: function() {
+      this.issuesData = null
+      this.getIssues()
     }
   },
   created() {
@@ -72,7 +80,11 @@ export default {
       const { issueStatus } = this.$route.query
       this.issueStatus = issueStatus
       this.$electron.remote.getCurrentWindow().setTitle(`${this.$electron.remote.app.getName()} - Issues - ${issueStatus}`)
-      const JQl = `assignee in (currentUser()) AND status in ("${issueStatus}") ORDER BY status ASC, updated DESC`
+      let issueStatusArr = []
+      issueStatus.split(',').forEach(ele => {
+        issueStatusArr.push(`"${ele.trim()}"`)
+      })
+      const JQl = `assignee in (currentUser()) AND status in (${issueStatusArr.join()}) ORDER BY status ASC, updated DESC`
       const fields = [
         'summary',
         'customfield_11941',
@@ -109,12 +121,6 @@ export default {
     currentChangeHandler(page) {
       this.getIssues((page - 1) * this.issuesData.maxResults)
     }
-  },
-  watch: {
-    $route: function() {
-      this.issuesData = null
-      this.getIssues()
-    }
   }
 }
 </script>
@@ -122,7 +128,7 @@ export default {
 <style lang="scss">
 .my-dashboard {
   .issue-table-pagination {
-    margin-top: 32px;
+    margin-top: 12px;
     padding: 10px;
     background-color: #fff;
     border-radius: 2px;

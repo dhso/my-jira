@@ -1,5 +1,5 @@
 <template>
-  <div class="my-overtime" v-loading="isLoading">
+  <div v-loading="isLoading" class="my-overtime">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item>Plugins</el-breadcrumb-item>
       <el-breadcrumb-item>Overtime</el-breadcrumb-item>
@@ -15,24 +15,24 @@
       @view-change="viewChageHandler"
       @day-click="dayClickHander"
     >
-      <span slot="title" slot-scope="{ title }">
-        {{ $dayjs(title).format('YYYY - MM') }}
-      </span>
-      <span slot="cell-content" slot-scope="{ cell, view, events }">
+      <template v-slot:title="{ title }">
+        {{ formatTitle(title) }}
+      </template>
+      <template v-slot:cell-content="{ cell, view, events }">
         {{ cell.formattedDate.split('-')[2] }}
         <p class="cell-content-event">{{ events[0] && events[0].title }}</p>
-      </span>
+      </template>
     </full-calendar>
     <el-dialog title="加班打卡" :visible.sync="overtimeDialogVisible" width="400px" center :modal-append-to-body="false">
-      <el-form :model="overtimeForm" :rules="overtimeRules" ref="overtimeForm" label-width="100px" :hide-required-asterisk="true">
+      <el-form ref="overtimeForm" :model="overtimeForm" :rules="overtimeRules" label-width="100px" hide-required-asterisk>
         <el-form-item label="加班结束时间" prop="datetime">
-          <el-input type="datetime-local" v-model="overtimeForm.datetime" placeholder="请输入加班结束时间"> </el-input>
+          <el-input v-model="overtimeForm.datetime" type="datetime-local" placeholder="请输入加班结束时间" />
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <template v-slot:footer>
         <el-button @click="overtimeDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="logOvertimeDatetimeHandler" :loading="isLoading">打 卡</el-button>
-      </span>
+        <el-button type="primary" :loading="isLoading" @click="logOvertimeDatetimeHandler">打 卡</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -76,6 +76,9 @@ export default {
         .format('YYYY-MM-DDTHH:mm')
       this.$set(this.overtimeForm, 'datetime', currentSelectedDatetime)
       this.overtimeDialogVisible = true
+    },
+    formatTitle(title) {
+      return this.$dayjs(title).format('YYYY - MM')
     },
     async getOvertimeRecords(onlyMe) {
       this.isLoading = true
@@ -131,6 +134,8 @@ export default {
   .vuecal {
     color: #333;
     height: calc(100vh - 70px);
+    background-color: #fff;
+    border-radius: 4px;
   }
   .vuecal__title {
     background-color: transparent;

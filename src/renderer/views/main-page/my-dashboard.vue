@@ -1,5 +1,8 @@
 <template>
-  <div class="my-dashboard" v-loading="isLoading">
+  <div
+    v-loading="isLoading"
+    class="my-dashboard"
+  >
     <el-breadcrumb separator="/">
       <el-breadcrumb-item>Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>Notification</el-breadcrumb-item>

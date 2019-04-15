@@ -1,22 +1,8 @@
-/**
- * {
-    protocol: 'https',
-    host: 'patsnap.atlassian.net',
-    username: 'donghao@patsnap.com',
-    password: 'Jh4F3UV85O5hNhiiVLxQF51B',
-    apiVersion: '2',
-    strictSSL: true
-  }
- */
-
-// http://34.92.41.110:8082/api/overtimerecord/ POST
-// {"createDate":"2019-04-11T22:10:00.000Z","user":{"email":"donghao@patsnap.com"}}
-
 import request from 'request-promise'
 import url from 'url'
 
 export const JiraPlugin = {
-  install: function(Vue, options) {
+  install: function(Vue) {
     // 添加全局方法或属性
     Vue.Jira = Vue.prototype.$jira = null
 

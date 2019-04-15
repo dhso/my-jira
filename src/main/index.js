@@ -68,7 +68,7 @@ function createMainWindow() {
     win.show()
   })
 
-  win.webContents.on('context-menu', e => {
+  win.webContents.on('context-menu', () => {
     contextMenu.popup()
   })
 
