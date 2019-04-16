@@ -91,7 +91,7 @@ export default {
       const url = onlyMe ? `${configs.PATSNAP_OVERTIME_RECORD_API}/user/${this.currentUser.name}` : `${configs.PATSNAP_OVERTIME_RECORD_API}/`
       try {
         const { firstCellDate, lastCellDate } = this.viewData
-        this.overTimeRecords = await this.$http.get(url, { params: { from: firstCellDate, to: lastCellDate } })
+        this.overTimeRecords = await this.$http.get(url, { params: { from: firstCellDate, to: lastCellDate, type: 'OVERTIME' } })
         const [date, overDatetime] = this.overTimeRecords.data
         let events = []
         if (date && overDatetime) {

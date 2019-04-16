@@ -2,31 +2,28 @@
   <div v-loading="isLoading" class="main-page" :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="side-bar">
       <div class="my-avatar">
-        <el-popover :disabled="!currentUser" placement="right" trigger="hover" width="400">
+        <el-popover :disabled="!currentUser" placement="right" trigger="hover" :visible-arrow="false" popper-class="avatar-popover" width="400">
           <el-form v-if="currentUser" label-width="120px" label-position="left">
             <el-form-item label="Name">
-              <span class="avatar-popover-text">{{ currentUser.name }}</span>
+              <span>{{ currentUser.name }}</span>
             </el-form-item>
             <el-form-item label="Email Address">
-              <span class="avatar-popover-text">{{ currentUser.emailAddress }}</span>
+              <span>{{ currentUser.emailAddress }}</span>
             </el-form-item>
             <el-form-item label="Display Name">
-              <span class="avatar-popover-text">{{ currentUser.displayName }}</span>
+              <span>{{ currentUser.displayName }}</span>
             </el-form-item>
             <el-form-item label="TimeZone">
-              <span class="avatar-popover-text">{{ currentUser.timeZone }}</span>
+              <span>{{ currentUser.timeZone }}</span>
             </el-form-item>
             <el-form-item label="Locale">
-              <span class="avatar-popover-text">{{ currentUser.locale }}</span>
+              <span>{{ currentUser.locale }}</span>
             </el-form-item>
             <el-form-item label="Active">
-              <span class="avatar-popover-text">{{ currentUser.active }}</span>
+              <span>{{ currentUser.active }}</span>
             </el-form-item>
           </el-form>
-          <el-button type="danger" class="avatar-popover-logout" @click="logoutHandler">
-            Logout
-          </el-button>
-          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']">
+          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']" />
         </el-popover>
       </div>
       <main-menus />
@@ -77,18 +74,6 @@ export default {
         this.loadingText = null
       }, 200)
     }
-  },
-  methods: {
-    logoutHandler() {
-      // 清除缓存
-      this.$stores.clear()
-      this.$message.info('已清除缓存，成功退出')
-      // 跳转登录
-      this.gotoLoginPage()
-    },
-    gotoLoginPage() {
-      this.$router.replace({ name: 'login-page' })
-    }
   }
 }
 </script>
@@ -130,13 +115,13 @@ export default {
   }
 }
 .avatar-popover {
-  &-text {
-    color: #333;
-    font-weight: 600;
+  color: #333;
+  .el-form-item--mini.el-form-item,
+  .el-form-item--small.el-form-item {
+    margin-bottom: 0;
   }
-  &-logout {
-    float: right;
-    margin: 10px 20px;
+  .el-form-item__label {
+    font-weight: 600;
   }
 }
 </style>
