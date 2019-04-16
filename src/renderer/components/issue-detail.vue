@@ -6,127 +6,47 @@
         {{ issue.fields.status.name }}
       </el-tag>
     </p>
-    <div
-      v-loading="isTransitionLoading"
-      class="issue-actions"
-    >
-      <i
-        v-show="isLoading"
-        class="el-icon-loading"
-      />
-      <el-button-group
-        v-show="!isLoading"
-        class=""
-      >
-        <el-button
-          v-for="transition in transitionsList"
-          :key="transition.id"
-          type="primary"
-          size="mini"
-          @click="transitionHandler(transition)"
-        >
+    <div v-loading="isTransitionLoading" class="issue-actions">
+      <i v-show="isLoading" class="el-icon-loading" />
+      <el-button-group v-show="!isLoading" class="">
+        <el-button v-for="transition in transitionsList" :key="transition.id" type="primary" size="mini" @click="transitionHandler(transition)">
           {{ transition.name }}
         </el-button>
       </el-button-group>
     </div>
-    <el-collapse
-      v-model="activeNames"
-      :accordion="false"
-    >
-      <el-collapse-item
-        title="Summary"
-        name="summary"
-      >
+    <el-collapse v-model="activeNames" :accordion="false">
+      <el-collapse-item title="Summary" name="summary">
         <p>{{ issue.fields.summary }}</p>
       </el-collapse-item>
-      <el-collapse-item
-        title="Worklogs"
-        name="worklogs"
-      >
-        <i
-          v-show="isLoading"
-          class="el-icon-loading"
-        />
+      <el-collapse-item title="Worklogs" name="worklogs">
+        <i v-show="isLoading" class="el-icon-loading" />
         <div v-show="!isLoading">
-          <el-table
-            :data="issueWorklogs"
-            border
-            stripe
-            :fit="false"
-            class="worklog-table"
-          >
-            <el-table-column
-              prop="date"
-              label="Date"
-              width="140"
-            >
+          <el-table :data="issueWorklogs" border stripe :fit="false" class="worklog-table">
+            <el-table-column prop="date" label="Date" width="140">
               <template slot-scope="scope">
                 <span>{{ $dayjs(scope.row.started).format('YYYY-MM-DD HH:mm:ss') }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="timeSpent"
-              label="Time Spent"
-              width="160"
-            />
+            <el-table-column prop="timeSpent" label="Time Spent" width="160" />
           </el-table>
-          <el-button
-            type="text"
-            icon="el-icon-circle-plus"
-            size="mini"
-            @click="worklogDialogVisible = true"
-          >
+          <el-button type="text" icon="el-icon-circle-plus" size="mini" @click="worklogDialogVisible = true">
             Add worklog
           </el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog
-      title="Add Worklog"
-      :visible.sync="worklogDialogVisible"
-      width="420px"
-      append-to-body
-      center
-      @open="worklogFormOpen"
-    >
-      <el-form
-        ref="worklogForm"
-        :model="worklogForm"
-        :rules="worklogRules"
-        label-width="100px"
-        :hide-required-asterisk="true"
-        class="worklog-form"
-      >
-        <el-form-item
-          label="timeSpent"
-          prop="timeSpent"
-        >
-          <el-input
-            v-model="worklogForm.timeSpent"
-            placeholder="eg. 3w 4d 12h"
-          />
+    <el-dialog title="Add Worklog" :visible.sync="worklogDialogVisible" width="420px" append-to-body center @open="worklogFormOpen">
+      <el-form ref="worklogForm" :model="worklogForm" :rules="worklogRules" label-width="100px" :hide-required-asterisk="true" class="worklog-form">
+        <el-form-item label="timeSpent" prop="timeSpent">
+          <el-input v-model="worklogForm.timeSpent" placeholder="eg. 3w 4d 12h" />
         </el-form-item>
-        <el-form-item
-          label="started"
-          prop="started"
-        >
-          <el-input
-            v-model="worklogForm.started"
-            type="datetime-local"
-            placeholder="请输入开始时间"
-          />
+        <el-form-item label="started" prop="started">
+          <el-input v-model="worklogForm.started" type="datetime-local" placeholder="请输入开始时间" />
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="worklogDialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          :loading="isAddworklogLoading"
-          @click="addWorklogHandler"
-        >确 定</el-button>
+        <el-button type="primary" :loading="isAddworklogLoading" @click="addWorklogHandler">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -193,6 +113,7 @@ export default {
         timeSpent: this.worklogForm.timeSpent
       })
       await this.getIssueWorklogs()
+      this.$events.emit('my-issues:reload')
       this.$message.success('Add worklog success.')
       this.worklogDialogVisible = false
       this.isAddworklogLoading = false

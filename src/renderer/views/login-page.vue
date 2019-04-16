@@ -1,61 +1,25 @@
 <template>
   <div class="login-page">
-    <el-form
-      ref="loginInfoForm"
-      :model="loginInfoForm"
-      :rules="loginInfoRules"
-      label-width="100px"
-      :hide-required-asterisk="true"
-      class="login-info-form"
-    >
+    <el-form ref="loginInfoForm" :model="loginInfoForm" :rules="loginInfoRules" label-width="100px" :hide-required-asterisk="true" class="login-info-form">
       <el-form-item>
         <h2>My Jira</h2>
       </el-form-item>
-      <el-form-item
-        label="邮箱"
-        prop="username"
-      >
-        <el-input
-          v-model="loginInfoForm.username"
-          clearable
-          placeholder="请输入邮箱"
-        />
+      <el-form-item label="邮箱" prop="username">
+        <el-input v-model="loginInfoForm.username" clearable placeholder="请输入邮箱" />
       </el-form-item>
-      <el-form-item
-        label="密钥"
-        prop="password"
-      >
-        <el-input
-          v-model="loginInfoForm.password"
-          type="password"
-          clearable
-          placeholder="请输入密钥"
-        />
+      <el-form-item label="密钥" prop="password">
+        <el-input v-model="loginInfoForm.password" type="password" clearable placeholder="请输入密钥" />
       </el-form-item>
-      <el-form-item
-        label="域名"
-        prop="fullHost"
-      >
-        <el-input
-          v-model="loginInfoForm.fullHost"
-          clearable
-          placeholder="请输入域名"
-        />
+      <el-form-item label="域名" prop="fullHost">
+        <el-input v-model="loginInfoForm.fullHost" clearable placeholder="请输入域名" />
       </el-form-item>
       <el-form-item>
-        <el-button
-          type="text"
-          @click="generateTokenHandler"
-        >
+        <el-button type="text" @click="generateTokenHandler">
           点击此处管理登录密钥
         </el-button>
       </el-form-item>
       <el-form-item class="action-buttons">
-        <el-button
-          type="primary"
-          :loading="isLoading"
-          @click="submitForm('loginInfoForm')"
-        >
+        <el-button type="primary" :loading="isLoading" @click="submitForm('loginInfoForm')">
           立即登录
         </el-button>
         <el-button @click="resetForm('loginInfoForm')">
@@ -63,11 +27,7 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <video
-      muted
-      autoplay="autoplay"
-      loop="loop"
-    >
+    <video muted autoplay="autoplay" loop="loop">
       <source src="http://cdn.moji.com/websrc/video/video621.mp4">
     </video>
   </div>

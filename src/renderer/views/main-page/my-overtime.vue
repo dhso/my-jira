@@ -110,7 +110,7 @@ export default {
         }
         this.overTimeRecords = events
       } catch (err) {
-        this.$message.error(err)
+        this.$message({ message: err, type: 'error' })
       } finally {
         this.isLoading = false
       }
@@ -121,11 +121,12 @@ export default {
         this.isLoading = true
         const url = `${configs.PATSNAP_OVERTIME_RECORD_API}/`
         try {
-          await this.$http.post(url, { createDate: this.overtimeForm.datetime, user: { email: this.currentUser.emailAddress } })
+          await this.$http.post(url, { createDate: this.overtimeForm.datetime, didOnVacation: false, didOvertime: true, user: { email: this.currentUser.emailAddress } })
           this.getOvertimeRecords(true)
           this.overtimeDialogVisible = false
+          this.$message({ message: '打卡成功', type: 'success' })
         } catch (err) {
-          this.$message.error(err)
+          this.$message({ message: err, type: 'error' })
         } finally {
           this.isLoading = false
         }

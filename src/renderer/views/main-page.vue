@@ -23,7 +23,7 @@
               <span>{{ currentUser.active }}</span>
             </el-form-item>
           </el-form>
-          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']" />
+          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']">
         </el-popover>
       </div>
       <main-menus />

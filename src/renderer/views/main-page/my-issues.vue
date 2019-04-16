@@ -1,10 +1,38 @@
 <template>
-  <div class="my-dashboard">
+  <div class="my-issues">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item>Issues</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ issueStatus }}</el-breadcrumb-item>
+      <el-breadcrumb-item>Jira</el-breadcrumb-item>
+      <el-breadcrumb-item>My Issues</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-table v-loading="isLoading" :data="issuesData && issuesData.issues" border stripe row-key="key" height="calc(100vh - 130px)" @row-click="rowClick">
+
+    <el-collapse class="filters">
+      <el-collapse-item name="1">
+        <template v-slot:title>
+          <span>筛选条件</span>
+        </template>
+        <el-form label-width="80px" label-position="left">
+          <el-form-item label="Status">
+            <el-checkbox-group v-model="selectedIssueStatus">
+              <el-checkbox v-for="issueStatus in issueStatuses" :key="issueStatus" :label="issueStatus" />
+              <el-button type="text" @click.native="unselectAllIssueStatusClickHandler">
+                Unselect All
+              </el-button>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-form>
+      </el-collapse-item>
+    </el-collapse>
+
+    <el-table
+      v-loading="isLoading"
+      element-loading-text="拼命加载中, 请耐心等待"
+      :data="issuesData && issuesData.issues"
+      border
+      stripe
+      row-key="key"
+      height="calc(100vh - 170px)"
+      @row-click="rowClick"
+    >
       <el-table-column type="index" fixed />
       <el-table-column label="Key" width="100" fixed>
         <template slot-scope="scope">
@@ -18,10 +46,11 @@
       <el-table-column prop="fields.timetracking.originalEstimate" label="Original Estimate" width="120" />
       <el-table-column prop="fields.timetracking.remainingEstimate" label="Remaining Estimate" width="130" />
     </el-table>
+
     <div class="issue-table-pagination">
       <el-pagination
         background
-        layout="prev, pager, next"
+        layout="prev, pager, next, ->, total"
         :current-page="issuesData && Math.ceil((issuesData.startAt + 1) / issuesData.maxResults)"
         :total="issuesData && issuesData.total"
         :page-size="issuesData && issuesData.maxResults"
@@ -30,45 +59,45 @@
         @next-click="currentChangeHandler"
       />
     </div>
-    <div :class="['drawer', { 'drawer-show': showDrawer }]" @click.self="showDrawer = !showDrawer">
-      <div class="drawer-container">
-        <div v-if="selectedRow">
-          <issue-detail :key="selectedRow.key" :issue="selectedRow" />
-        </div>
-      </div>
-    </div>
+    <drawer-container :visible="issueDetailVisible" @click.self="issueDetailVisible = false">
+      <template v-slot:content>
+        <issue-detail v-if="selectedRow" :key="selectedRow.key" :issue="selectedRow" />
+      </template>
+    </drawer-container>
   </div>
 </template>
 
 <script>
 import IssueDetail from '@/components/issue-detail'
+import drawerContainer from '@/components/drawer-container'
 
 export default {
   name: 'my-issues',
   components: {
-    'issue-detail': IssueDetail
+    'issue-detail': IssueDetail,
+    'drawer-container': drawerContainer
   },
   data() {
     return {
       isLoading: false,
       loadingText: '拼命加载中',
       issuesData: null,
-      issueStatus: null,
-      showDrawer: false,
-      selectedRow: null
+      issueDetailVisible: false,
+      selectedRow: null,
+      selectedIssueStatus: []
     }
   },
   watch: {
-    $route: function() {
-      this.issuesData = null
+    selectedIssueStatus() {
       this.getIssues()
     }
   },
   created() {
     console.log('my issues')
+    this.issueStatuses = ['TBD', 'In Development', 'Ready to Test', 'In Testing', 'Done', 'Open', 'Reopened', 'In Progress', 'Resolved', 'Closed']
     this.$events.on('my-issues:reload', this.getIssues)
     this.$events.on('my-issues:close-issue-detail', () => {
-      this.showDrawer = false
+      this.issueDetailVisible = false
     })
   },
   mounted() {
@@ -77,14 +106,15 @@ export default {
   methods: {
     async getIssues(startAt = 0, maxResults = 20) {
       this.isLoading = true
-      const { issueStatus } = this.$route.query
-      this.issueStatus = issueStatus
-      this.$electron.remote.getCurrentWindow().setTitle(`${this.$electron.remote.app.getName()} - Issues - ${issueStatus}`)
-      let issueStatusArr = []
-      issueStatus.split(',').forEach(ele => {
-        issueStatusArr.push(`"${ele.trim()}"`)
-      })
-      const JQl = `assignee in (currentUser()) AND status in (${issueStatusArr.join()}) ORDER BY status ASC, updated DESC`
+      let JQl = `assignee in (currentUser())`
+      if (this.selectedIssueStatus.length > 0) {
+        let issueStatusStrArr = []
+        this.selectedIssueStatus.forEach(ele => {
+          issueStatusStrArr.push(`"${ele.trim()}"`)
+        })
+        JQl += ` AND status in (${issueStatusStrArr.join()})`
+      }
+      JQl += ` ORDER BY updated DESC`
       const fields = [
         'summary',
         'customfield_11941',
@@ -95,7 +125,6 @@ export default {
         'status',
         'fixVersions',
         'customfield_11957',
-        // 'timeoriginalestimate',
         'issuetype',
         'customfield_11959',
         'issuelinks'
@@ -115,56 +144,39 @@ export default {
       }
     },
     rowClick(row, column, event) {
-      this.showDrawer = true
       this.selectedRow = row
+      this.issueDetailVisible = true
     },
     currentChangeHandler(page) {
       this.getIssues((page - 1) * this.issuesData.maxResults)
+    },
+    unselectAllIssueStatusClickHandler() {
+      this.selectedIssueStatus = []
     }
   }
 }
 </script>
 
 <style lang="scss">
-.my-dashboard {
+.my-issues {
+  .filters {
+    .el-collapse-item__header {
+      padding: 0 10px;
+      border-bottom: 1px solid #EBEEF5;
+    }
+    .el-collapse-item__wrap {
+      padding: 16px;
+    }
+    .el-form-item__label {
+      font-weight: 600;
+    }
+  }
+  .el-table--border, .el-table--group{
+    border: none;
+  }
   .issue-table-pagination {
-    margin-top: 12px;
     padding: 10px;
     background-color: #fff;
-    border-radius: 2px;
-  }
-  .drawer {
-    z-index: 2001;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.3);
-    .drawer-container {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 95%;
-      overflow: auto;
-      transform: translateX(100%);
-      background-color: #fff;
-      transition: transform ease-in-out 0.3s, visibility 0.3s;
-      box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.15);
-      padding: 16px;
-      &__title {
-        font-size: 18px;
-        font-weight: 600;
-      }
-    }
-    &.drawer-show {
-      visibility: visible;
-      .drawer-container {
-        transform: translateX(0);
-      }
-    }
   }
 }
 </style>

@@ -17,9 +17,9 @@ Vue.dayjs = Vue.prototype.$dayjs = dayjs
 Vue.stores = Vue.prototype.$stores = new Stores()
 Vue.config.productionTip = false
 
-Vue.use(ElementUI, { size: 'small' })
 Vue.use(VueEvents)
 Vue.use(JiraPlugin)
+Vue.use(ElementUI, { size: 'small' })
 
 /* eslint-disable no-new */
 new Vue({

@@ -12,33 +12,7 @@
       <el-menu-item-group>
         <span slot="title">Issues</span>
         <el-menu-item index="2_1">
-          TBD
-        </el-menu-item>
-        <el-menu-item index="2_2">
-          In Development
-        </el-menu-item>
-        <el-menu-item index="2_3">
-          <span slot="title">Ready to Test</span>
-        </el-menu-item>
-        <el-menu-item index="2_4">
-          <span slot="title">In Testing</span>
-        </el-menu-item>
-        <el-menu-item index="2_5">
-          <span slot="title">Done</span>
-        </el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="Bugs">
-        <el-menu-item index="2_6">
-          <span slot="title">Open, Reopened</span>
-        </el-menu-item>
-        <el-menu-item index="2_7">
-          <span slot="title">In Progress</span>
-        </el-menu-item>
-        <el-menu-item index="2_8">
-          <span slot="title">Resolved</span>
-        </el-menu-item>
-        <el-menu-item index="2_9">
-          <span slot="title">Closed</span>
+          Issues Table
         </el-menu-item>
       </el-menu-item-group>
     </el-submenu>
@@ -81,31 +55,7 @@ export default {
       this.$router.push({ name: 'my-dashboard' })
     },
     act_2_1() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'TBD' } })
-    },
-    act_2_2() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'In Development' } })
-    },
-    act_2_3() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'Ready to Test' } })
-    },
-    act_2_4() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'In Testing' } })
-    },
-    act_2_5() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'Done' } })
-    },
-    act_2_6() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'Open, Reopened' } })
-    },
-    act_2_7() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'In Progress' } })
-    },
-    act_2_8() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'Resolved' } })
-    },
-    act_2_9() {
-      this.$router.push({ name: 'my-issues', query: { issueStatus: 'Closed' } })
+      this.$router.push({ name: 'my-issues' })
     },
     act_3_1() {
       this.$router.push({ name: 'my-overtime' })
