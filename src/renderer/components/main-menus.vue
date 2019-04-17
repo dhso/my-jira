@@ -10,9 +10,9 @@
         <span slot="title">Jira</span>
       </template>
       <el-menu-item-group>
-        <span slot="title">Issues</span>
+        <span slot="title">Jira</span>
         <el-menu-item index="2_1">
-          Issues Table
+          My Issues
         </el-menu-item>
       </el-menu-item-group>
     </el-submenu>
@@ -69,7 +69,7 @@ export default {
         .then(() => {
           // 清除缓存
           this.$stores.clear()
-          this.$message.info('已清除缓存，成功退出')
+          this.$message({ message: '已清除缓存，成功退出.', type: 'info' })
           // 跳转登录
           this.$router.replace({ name: 'login-page' })
         })

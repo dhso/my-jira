@@ -1,0 +1,22 @@
+'summary',
+'customfield_11941', // PM Owner
+'customfield_11960', // UE Owner
+'customfield_11947', // TL Owner
+'customfield_11006', // QA Owner
+'customfield_10710', // Sprint
+'timetracking',
+'status',
+'assignee',
+'reporter',
+'created',
+'updated',
+'fixVersions',
+'customfield_11957', // Business Value Rank
+'issuetype',
+'customfield_11959', // UE Design Link
+'issuelinks',
+'customfield_11984', // Ticket Type
+'customfield_11701', // Group of Core
+'customfield_11927' // Time To Test
+
+https://patsnap.atlassian.net/rest/api/2/field

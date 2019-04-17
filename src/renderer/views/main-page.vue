@@ -65,7 +65,7 @@ export default {
     } catch (err) {
       console.log(err)
       this.loadingText = '校验失败'
-      this.$message.error(`${err.statusCode}:${err.name}`)
+      this.$message({ message: `${err.statusCode}:${err.name}`, type: 'error' })
       // 跳转登录
       this.gotoLoginPage()
     } finally {

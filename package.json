@@ -1,7 +1,7 @@
 {
   "name": "my-jira",
   "productName": "My Jira",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "author": "donghao@patsnap.com",
   "description": "A lite jira desktop",
   "homepage": "http://blog.minws.com",
@@ -29,7 +29,7 @@
   },
   "build": {
     "productName": "My Jira",
-    "appId": "com.minws.jira",
+    "appId": "com.minws.my-jira",
     "appImage": {
       "systemIntegration": "doNotAsk"
     },

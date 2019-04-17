@@ -88,7 +88,7 @@ export default {
       await this.getIssueWorklogs()
       await this.getTransitionsList()
     } catch (err) {
-      this.$message.error(err)
+      this.$message({ message: err, type: 'error' })
     } finally {
       this.isLoading = false
     }
@@ -114,7 +114,7 @@ export default {
       })
       await this.getIssueWorklogs()
       this.$events.emit('my-issues:reload')
-      this.$message.success('Add worklog success.')
+      this.$message({ message: 'Add worklog success.', type: 'success' })
       this.worklogDialogVisible = false
       this.isAddworklogLoading = false
     },
@@ -126,7 +126,7 @@ export default {
         }
       })
       this.$events.emit('my-issues:reload')
-      this.$message.success('Transition issue success.')
+      this.$message({ message: 'Transition issue success.', type: 'success' })
       this.$events.emit('my-issues:close-issue-detail')
       this.isTransitionLoading = false
     }

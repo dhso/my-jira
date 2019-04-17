@@ -24,16 +24,18 @@
     </el-collapse>
 
     <el-table
+      ref="issuesTable"
       v-loading="isLoading"
       element-loading-text="拼命加载中, 请耐心等待"
       :data="issuesData && issuesData.issues"
+      class="issues-table"
       border
       stripe
       row-key="key"
       height="calc(100vh - 170px)"
       @row-click="rowClick"
     >
-      <el-table-column type="index" fixed />
+      <el-table-column type="index" :index="issuesData && issuesData.startAt + 1" fixed />
       <el-table-column label="Key" width="100" fixed>
         <template slot-scope="scope">
           <el-button size="mini" type="text">
@@ -42,9 +44,18 @@
         </template>
       </el-table-column>
       <el-table-column prop="fields.summary" label="Summary" />
-      <el-table-column prop="fields.status.name" label="Status" width="130" />
+      <el-table-column label="Status" width="130">
+        <template slot-scope="scope">
+          <span :class="['status-text', `color-${scope.row.fields.status.statusCategory.colorName}`]">{{ scope.row.fields.status.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="fields.timetracking.originalEstimate" label="Original Estimate" width="120" />
-      <el-table-column prop="fields.timetracking.remainingEstimate" label="Remaining Estimate" width="130" />
+      <el-table-column prop="fields.timetracking.timeSpent" label="Time Spent" width="100" />
+      <el-table-column label="Time To Test" width="130">
+        <template slot-scope="scope">
+          {{ $dayjs(scope.row.fields.customfield_11927).format('YYYY-MM-DD HH:mm') }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <div class="issue-table-pagination">
@@ -115,30 +126,17 @@ export default {
         JQl += ` AND status in (${issueStatusStrArr.join()})`
       }
       JQl += ` ORDER BY updated DESC`
-      const fields = [
-        'summary',
-        'customfield_11941',
-        'customfield_11960',
-        'customfield_11947',
-        'customfield_11006',
-        'timetracking',
-        'status',
-        'fixVersions',
-        'customfield_11957',
-        'issuetype',
-        'customfield_11959',
-        'issuelinks'
-      ]
+      const fields = ['summary', 'timetracking', 'status', 'customfield_11927']
       try {
         this.issuesData = await this.$jira.searchJira(JQl, {
           maxResults,
           startAt,
           fields
         })
-        // console.log(this.issuesData)
+        console.log(this.issuesData)
       } catch (err) {
         console.log(err)
-        this.$message.error(err)
+        this.$message({ message: err, type: 'error' })
       } finally {
         this.isLoading = false
       }
@@ -149,6 +147,9 @@ export default {
     },
     currentChangeHandler(page) {
       this.getIssues((page - 1) * this.issuesData.maxResults)
+      this.$nextTick(() => {
+        this.$refs.issuesTable.bodyWrapper.scrollTop = 0
+      })
     },
     unselectAllIssueStatusClickHandler() {
       this.selectedIssueStatus = []
@@ -162,7 +163,7 @@ export default {
   .filters {
     .el-collapse-item__header {
       padding: 0 10px;
-      border-bottom: 1px solid #EBEEF5;
+      border-bottom: 1px solid #ebeef5;
     }
     .el-collapse-item__wrap {
       padding: 16px;
@@ -171,8 +172,11 @@ export default {
       font-weight: 600;
     }
   }
-  .el-table--border, .el-table--group{
+  .issues-table {
     border: none;
+    .status-text {
+      font-weight: 600;
+    }
   }
   .issue-table-pagination {
     padding: 10px;

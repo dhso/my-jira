@@ -25,19 +25,26 @@ export default {
     // updater downloading
     ipcRenderer.on('updater:event:update-downloading', meta => {
       console.log(meta)
-      this.$notify.info({ title: '升级', message: '正在下载升级包，请耐心等待.' })
+      this.$notify({ title: '升级', type: 'info', message: '正在下载升级包，请耐心等待.', duration: '0' })
     })
     // updater downloading
     ipcRenderer.on('updater:event:update-downloaded', meta => {
       console.log(meta)
-      this.$notify.info({ title: '升级', message: '升级包下载完成,请退出程序来完成安装.' })
-      setTimeout(() => {
-        ipcRenderer.send('updater:method:quitAndInstall')
-      }, 1000)
+      this.$notify.closeAll()
+      this.$notify({
+        title: '升级',
+        type: 'success',
+        message: '升级包下载完成,点击此处完成安装.',
+        duration: '0',
+        showClose: false,
+        onClick: () => {
+          ipcRenderer.send('updater:method:quitAndInstall')
+        }
+      })
     })
     // updater error
     ipcRenderer.on('updater:event:error', error => {
-      this.$notify.error({ title: '升级', message: error })
+      this.$notify({ title: '升级', type: 'error', message: error, duration: '0' })
     })
     // updater checkForUpdates
     ipcRenderer.send('updater:method:checkForUpdates')
@@ -59,5 +66,16 @@ body,
 #app {
   width: 100%;
   height: 100%;
+}
+.color- {
+  &yellow {
+    color: #f1c40f;
+  }
+  &green {
+    color: #27ae60;
+  }
+  &blue-gray {
+    color: #2c3e50;
+  }
 }
 </style>

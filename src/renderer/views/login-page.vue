@@ -71,11 +71,11 @@ export default {
           this.currentUser = await this.$jira.getCurrentUser()
           // 存储当前用户信息
           this.$stores.set('current.user', this.currentUser)
-          this.$message.success(`欢迎回来, ${this.currentUser.displayName}!`)
+          this.$message({ message: `欢迎回来, ${this.currentUser.displayName}!`, type: 'success' })
           // 跳转主页
           this.$router.replace({ name: 'main-page' })
         } catch (error) {
-          this.$message.error(`${error.statusCode}:${error.name}`)
+          this.$message({ message: `${error.statusCode}:${error.name}`, type: 'error' })
         } finally {
           this.isLoading = false
         }

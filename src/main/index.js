@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'development') {
     .replace(/\\/g, '\\\\')
 }
 
-app.setAppUserModelId('com.minws.devdoc')
+app.setAppUserModelId('com.minws.my-jira')
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
 let mainWindow
@@ -127,6 +127,7 @@ app.on('ready', () => {
     updater.downloadUpdate()
   })
   ipcMain.on('updater:method:quitAndInstall', () => {
+    isQuitting = true
     updater.quitAndInstall()
   })
 })
