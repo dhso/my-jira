@@ -135,9 +135,9 @@ export default {
         })
         console.log(this.issuesData)
       } catch (err) {
-        console.log(err)
         this.$message({ message: err, type: 'error' })
       } finally {
+        this.$refs.issuesTable.bodyWrapper.scrollTop = 0
         this.isLoading = false
       }
     },
@@ -147,9 +147,6 @@ export default {
     },
     currentChangeHandler(page) {
       this.getIssues((page - 1) * this.issuesData.maxResults)
-      this.$nextTick(() => {
-        this.$refs.issuesTable.bodyWrapper.scrollTop = 0
-      })
     },
     unselectAllIssueStatusClickHandler() {
       this.selectedIssueStatus = []
