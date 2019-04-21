@@ -1,6 +1,6 @@
 <template>
   <div :class="['drawer-container', { 'drawer-visible': visible }]" v-on="$listeners">
-    <div class="drawer-container-content">
+    <div class="drawer-container-content" :style="{ width: width }">
       <slot name="content" />
     </div>
   </div>
@@ -13,6 +13,10 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    width: {
+      type: String,
+      default: '80%'
     }
   }
 }
@@ -39,7 +43,6 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
-    width: 95%;
     overflow: auto;
     transform: translateX(100%);
     background-color: #fff;

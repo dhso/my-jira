@@ -8,10 +8,10 @@
     <el-collapse class="filters">
       <el-collapse-item name="1">
         <template v-slot:title>
-          <span>筛选条件</span>
+          <span>Filters</span>
         </template>
         <el-form label-width="80px" label-position="left">
-          <el-form-item label="Status">
+          <el-form-item label="Status:">
             <el-checkbox-group v-model="selectedIssueStatus">
               <el-checkbox v-for="issueStatus in issueStatuses" :key="issueStatus" :label="issueStatus" />
               <el-button type="text" @click.native="unselectAllIssueStatusClickHandler">
@@ -49,8 +49,6 @@
           <span :class="['status-text', `color-${scope.row.fields.status.statusCategory.colorName}`]">{{ scope.row.fields.status.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="fields.timetracking.originalEstimate" label="Original Estimate" width="120" />
-      <el-table-column prop="fields.timetracking.timeSpent" label="Time Spent" width="100" />
       <el-table-column label="Time To Test" width="130">
         <template slot-scope="scope">
           {{ $dayjs(scope.row.fields.customfield_11927).format('YYYY-MM-DD HH:mm') }}
@@ -61,16 +59,20 @@
     <div class="issue-table-pagination">
       <el-pagination
         background
-        layout="prev, pager, next, ->, total"
+        layout="prev, pager, next,slot, ->, total"
         :current-page="issuesData && Math.ceil((issuesData.startAt + 1) / issuesData.maxResults)"
         :total="issuesData && issuesData.total"
         :page-size="issuesData && issuesData.maxResults"
         @current-change="currentChangeHandler"
         @prev-click="currentChangeHandler"
         @next-click="currentChangeHandler"
-      />
+      >
+        <template v-slot>
+          <el-button class="pagination-btn" icon="el-icon el-icon-refresh" :disabled="isLoading" @click="currentReloadHandler" />
+        </template>
+      </el-pagination>
     </div>
-    <drawer-container :visible="issueDetailVisible" @click.self="issueDetailVisible = false">
+    <drawer-container :visible="issueDetailVisible" width="600px" @click.self="issueDetailVisible = false">
       <template v-slot:content>
         <issue-detail v-if="selectedRow" :key="selectedRow.key" :issue="selectedRow" />
       </template>
@@ -100,22 +102,32 @@ export default {
   },
   watch: {
     selectedIssueStatus() {
-      this.getIssues()
+      this.$events.emit('my-issues:load')
     }
   },
   created() {
     console.log('my issues')
     this.issueStatuses = ['TBD', 'In Development', 'Ready to Test', 'In Testing', 'Done', 'Open', 'Reopened', 'In Progress', 'Resolved', 'Closed']
-    this.$events.on('my-issues:reload', this.getIssues)
+    this.$events.on('my-issues:load', (args = {}) => this.getIssues(args))
+    this.$events.on('my-issues:reload', () =>
+      this.getIssues({
+        startAt: this.issuesData.startAt
+      })
+    )
     this.$events.on('my-issues:close-issue-detail', () => {
       this.issueDetailVisible = false
     })
   },
   mounted() {
-    this.getIssues()
+    this.$events.emit('my-issues:load')
+  },
+  beforeDestroy() {
+    this.$events.off('my-issues:load')
+    this.$events.off('my-issues:reload')
+    this.$events.off('my-issues:close-issue-detail')
   },
   methods: {
-    async getIssues(startAt = 0, maxResults = 20) {
+    async getIssues({ startAt = 0, maxResults = 20 }) {
       this.isLoading = true
       let JQl = `assignee in (currentUser())`
       if (this.selectedIssueStatus.length > 0) {
@@ -126,14 +138,14 @@ export default {
         JQl += ` AND status in (${issueStatusStrArr.join()})`
       }
       JQl += ` ORDER BY updated DESC`
-      const fields = ['summary', 'timetracking', 'status', 'customfield_11927']
+      const fields = ['summary', 'status', 'customfield_11927']
       try {
         this.issuesData = await this.$jira.searchJira(JQl, {
           maxResults,
           startAt,
           fields
         })
-        console.log(this.issuesData)
+        console.log('issuesData', this.issuesData)
       } catch (err) {
         this.$message({ message: err, type: 'error' })
       } finally {
@@ -146,7 +158,12 @@ export default {
       this.issueDetailVisible = true
     },
     currentChangeHandler(page) {
-      this.getIssues((page - 1) * this.issuesData.maxResults)
+      this.$events.emit('my-issues:load', {
+        startAt: (page - 1) * this.issuesData.maxResults
+      })
+    },
+    currentReloadHandler() {
+      this.$events.emit('my-issues:reload')
     },
     unselectAllIssueStatusClickHandler() {
       this.selectedIssueStatus = []
@@ -174,10 +191,26 @@ export default {
     .status-text {
       font-weight: 600;
     }
+    &.el-table--border:after,
+    &.el-table--group:after,
+    &.el-table:before {
+      background-color: #fff;
+    }
   }
   .issue-table-pagination {
     padding: 10px;
     background-color: #fff;
+    .pagination-btn {
+      background-color: #f4f4f5;
+      color: #606266;
+      margin: 0 5px;
+      min-width: 30px;
+      border-radius: 2px;
+      padding: 0;
+      &:not(:disabled):hover {
+        color: #409eff;
+      }
+    }
   }
 }
 </style>

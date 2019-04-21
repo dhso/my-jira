@@ -11,7 +11,7 @@
 'created',
 'updated',
 'fixVersions',
-'customfield_11957', // Business Value Rank
+'customfield_10208', // Business Value
 'issuetype',
 'customfield_11959', // UE Design Link
 'issuelinks',

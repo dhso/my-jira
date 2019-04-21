@@ -67,6 +67,21 @@ body,
   width: 100%;
   height: 100%;
 }
+a,
+a:link,
+a:visited,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  color: #409eff;
+}
+a:hover,
+a:focus {
+  color: #66b1ff;
+  border-color: transparent;
+  background-color: transparent;
+}
 .color- {
   &yellow {
     color: #f1c40f;
@@ -76,6 +91,15 @@ body,
   }
   &blue-gray {
     color: #2c3e50;
+  }
+}
+
+.el-table.simple-table {
+  &::before {
+    display: none;
+  }
+  td {
+    border: none;
   }
 }
 </style>

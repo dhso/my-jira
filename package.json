@@ -1,7 +1,7 @@
 {
   "name": "my-jira",
   "productName": "My Jira",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "donghao@patsnap.com",
   "description": "A lite jira desktop",
   "homepage": "http://blog.minws.com",
@@ -86,6 +86,7 @@
     "electron-simple-updater": "^1.5.0",
     "electron-store": "^3.2.0",
     "element-ui": "^2.7.2",
+    "lodash": "^4.17.11",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "vue": "^2.6.10",

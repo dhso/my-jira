@@ -124,4 +124,8 @@ export default {
     font-weight: 600;
   }
 }
+.el-table .el-table__header th.is-leaf {
+  background-color: #f5f7fa;
+  color: #606266;
+}
 </style>
