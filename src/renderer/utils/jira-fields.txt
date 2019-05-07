@@ -1,4 +1,5 @@
 'summary',
+'description',
 'customfield_11941', // PM Owner
 'customfield_11960', // UE Owner
 'customfield_11947', // TL Owner

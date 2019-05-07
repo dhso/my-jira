@@ -16,17 +16,10 @@
         </el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-    <el-submenu index="4">
-      <template slot="title">
-        <i class="el-icon-setting" />
-        <span slot="title">设置</span>
-      </template>
-      <el-menu-item-group title="账号">
-        <el-menu-item index="4_1">
-          <span slot="title">登出</span>
-        </el-menu-item>
-      </el-menu-item-group>
-    </el-submenu>
+    <el-menu-item index="3">
+      <i class="el-icon-setting" />
+      <span slot="title">设置</span>
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -46,20 +39,8 @@ export default {
     act_2_1() {
       this.$router.push({ name: 'my-issues' })
     },
-    act_4_1() {
-      this.$confirm('账号即将登出, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          // 清除缓存
-          this.$stores.clear()
-          this.$message({ message: '已清除缓存，成功退出.', type: 'info' })
-          // 跳转登录
-          this.$router.replace({ name: 'login-page' })
-        })
-        .catch(() => {})
+    act_3() {
+      this.$router.push({ name: 'my-settings' })
     }
   }
 }

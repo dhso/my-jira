@@ -24,120 +24,130 @@
           <span>Base Info</span>
           <i v-show="isBaseInfoLoading" class="issue-status el-icon el-icon-loading" />
         </template>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Type:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'issuetype.name', '&nbsp;') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>Ticket Type:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_11984.value', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Business Value:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_10208', '&nbsp;') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>Fix Version/s:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'fixVersions[0].name', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Reporter:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'reporter.displayName', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Sprint:</b>
-          </el-col>
-          <el-col :span="19">
-            <span>{{ get(sprint, 'name', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Sprint Start:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ formatDate(get(sprint, 'startDate'), '&nbsp;', 'YYYY-MM-DD') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>Sprint End:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ formatDate(get(sprint, 'endDate'), '&nbsp;', 'YYYY-MM-DD') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Time to Test:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ formatDate(get(issueData.fields, 'customfield_11927'), '&nbsp;', 'YYYY-MM-DD HH:mm') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>Group of Core:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_11701[0].value', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>PM Owner:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_11941.displayName', '&nbsp;') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>UE Owner:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_11960.displayName', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>TL Owner:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_11947.displayName', '&nbsp;') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>QA Owner:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ get(issueData.fields, 'customfield_11006.displayName', '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <b>Created:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ formatDate(get(issueData.fields, 'created'), '&nbsp;') }}</span>
-          </el-col>
-          <el-col :span="5">
-            <b>Updated:</b>
-          </el-col>
-          <el-col :span="7">
-            <span>{{ formatDate(get(issueData.fields, 'updated'), '&nbsp;') }}</span>
-          </el-col>
-        </el-row>
+        <template v-if="!isBaseInfoLoading">
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Type:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'issuetype.name', '&nbsp;') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>Ticket Type:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_11984.value', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Business Value:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_10208', '&nbsp;') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>Fix Version/s:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'fixVersions[0].name', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Reporter:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'reporter.displayName', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Sprint:</b>
+            </el-col>
+            <el-col :span="19">
+              <span>{{ get(sprint, 'name', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Sprint Start:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ formatDate(get(sprint, 'startDate'), '&nbsp;', 'YYYY-MM-DD') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>Sprint End:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ formatDate(get(sprint, 'endDate'), '&nbsp;', 'YYYY-MM-DD') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Time to Test:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ formatDate(get(issueData.fields, 'customfield_11927'), '&nbsp;', 'YYYY-MM-DD HH:mm') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>Group of Core:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_11701[0].value', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>PM Owner:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_11941.displayName', '&nbsp;') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>UE Owner:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_11960.displayName', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>TL Owner:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_11947.displayName', '&nbsp;') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>QA Owner:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ get(issueData.fields, 'customfield_11006.displayName', '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <b>Created:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ formatDate(get(issueData.fields, 'created'), '&nbsp;') }}</span>
+            </el-col>
+            <el-col :span="5">
+              <b>Updated:</b>
+            </el-col>
+            <el-col :span="7">
+              <span>{{ formatDate(get(issueData.fields, 'updated'), '&nbsp;') }}</span>
+            </el-col>
+          </el-row>
+        </template>
+      </el-collapse-item>
+
+      <el-collapse-item name="description">
+        <template v-slot:title>
+          <span>Description</span>
+          <i v-show="isBaseInfoLoading" class="issue-status el-icon el-icon-loading" />
+        </template>
+        <div v-html="descriptionHtml" />
       </el-collapse-item>
 
       <el-collapse-item name="timeTracking">
@@ -250,6 +260,8 @@
 
 <script>
 import { cloneDeep, merge, get, reduce } from 'lodash'
+import wiky from 'wiky.js'
+
 export default {
   name: 'IssueDetail',
   props: {
@@ -263,7 +275,7 @@ export default {
   data() {
     return {
       issueData: this.issue,
-      activeNames: ['baseInfo', 'timeTracking'],
+      activeNames: ['baseInfo', 'description', 'timeTracking'],
       isBaseInfoLoading: false,
       isWorklogLoading: false,
       isTransitionLoading: false,
@@ -315,6 +327,10 @@ export default {
         sprintObject[k] = v
       })
       return sprintObject
+    },
+    descriptionHtml() {
+      const _description = get(this.issueData.fields, 'description')
+      return _description ? wiky.process(_description, { 'link-image': false }) : null
     }
   },
   created() {
@@ -336,6 +352,7 @@ export default {
         this.isBaseInfoLoading = true
         const issueRes = await this.$jira.findIssue(this.issue.key, '', [
           'summary',
+          'description',
           'timetracking',
           'status',
           'reporter',

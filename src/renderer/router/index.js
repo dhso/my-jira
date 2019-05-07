@@ -32,14 +32,6 @@ const router = new Router({
           }
         },
         {
-          path: 'my-overtime',
-          name: 'my-overtime',
-          component: require('@/views/main-page/my-overtime').default,
-          meta: {
-            title: 'Overtime'
-          }
-        },
-        {
           path: 'my-settings',
           name: 'my-settings',
           component: require('@/views/main-page/my-settings').default,

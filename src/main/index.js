@@ -55,7 +55,10 @@ function createMainWindow() {
     alwaysOnTop: config.get('alwaysOnTop'),
     autoHideMenuBar: config.get('autoHideMenuBar'),
     backgroundColor: '#f2f2f2',
-    icon: path.join(__dirname, '../../icons/256x256.png')
+    icon: path.join(__dirname, '../../icons/256x256.png'),
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
 
   if (isDarwin) {

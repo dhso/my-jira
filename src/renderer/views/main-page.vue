@@ -2,29 +2,10 @@
   <div v-loading="isLoading" class="main-page" :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="side-bar">
       <div class="my-avatar">
-        <el-popover :disabled="!currentUser" placement="right" trigger="hover" :visible-arrow="false" popper-class="avatar-popover" width="400">
-          <el-form v-if="currentUser" label-width="120px" label-position="left">
-            <el-form-item label="Name">
-              <span>{{ currentUser.name }}</span>
-            </el-form-item>
-            <el-form-item label="Email Address">
-              <span>{{ currentUser.emailAddress }}</span>
-            </el-form-item>
-            <el-form-item label="Display Name">
-              <span>{{ currentUser.displayName }}</span>
-            </el-form-item>
-            <el-form-item label="TimeZone">
-              <span>{{ currentUser.timeZone }}</span>
-            </el-form-item>
-            <el-form-item label="Locale">
-              <span>{{ currentUser.locale }}</span>
-            </el-form-item>
-            <el-form-item label="Active">
-              <span>{{ currentUser.active }}</span>
-            </el-form-item>
-          </el-form>
-          <img slot="reference" :src="currentUser && currentUser.avatarUrls['48x48']">
-        </el-popover>
+        <el-image class="my-avatar-image" :src="currentUser && currentUser.avatarUrls['48x48']" fit="cover">
+          <i slot="placeholder" class="el-icon-loading" />
+          <i slot="error" class="el-icon-user-solid" />
+        </el-image>
       </div>
       <main-menus />
     </div>
@@ -67,7 +48,7 @@ export default {
       this.loadingText = '校验失败'
       this.$message({ message: `${err.statusCode}:${err.name}`, type: 'error' })
       // 跳转登录
-      this.gotoLoginPage()
+      this.$router.replace({ name: 'login-page' })
     } finally {
       setTimeout(() => {
         this.isLoading = false
@@ -91,7 +72,8 @@ export default {
       justify-content: center;
       align-items: center;
       height: 68px;
-      img {
+      color: #fff;
+      .my-avatar-image img{
         border-radius: 2px;
         width: 48px;
         height: 48px;
@@ -112,16 +94,6 @@ export default {
     & > .el-breadcrumb {
       margin-bottom: 20px;
     }
-  }
-}
-.avatar-popover {
-  color: #333;
-  .el-form-item--mini.el-form-item,
-  .el-form-item--small.el-form-item {
-    margin-bottom: 0;
-  }
-  .el-form-item__label {
-    font-weight: 600;
   }
 }
 .el-table .el-table__header th.is-leaf {
