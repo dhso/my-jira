@@ -30,7 +30,7 @@
           </el-form-item>
         </el-form>
         <el-button type="danger" round @click="logoutHandler">
-          登出账号
+          Logout
         </el-button>
       </el-tab-pane>
     </el-tabs>

@@ -2,10 +2,12 @@
   <div v-loading="isLoading" class="main-page" :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="side-bar">
       <div class="my-avatar">
-        <el-image class="my-avatar-image" :src="currentUser && currentUser.avatarUrls['48x48']" fit="cover">
-          <i slot="placeholder" class="el-icon-loading" />
-          <i slot="error" class="el-icon-user-solid" />
-        </el-image>
+        <template v-if="currentUser">
+          <el-image class="my-avatar-image" :src="currentUser.avatarUrls['48x48']" fit="cover">
+            <i slot="placeholder" class="el-icon-loading" />
+            <i slot="error" class="el-icon-picture-outline" />
+          </el-image>
+        </template>
       </div>
       <main-menus />
     </div>

@@ -12,6 +12,7 @@
 'created',
 'updated',
 'fixVersions',
+'attachment',
 'customfield_10208', // Business Value
 'issuetype',
 'customfield_11959', // UE Design Link

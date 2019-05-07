@@ -150,6 +150,18 @@
         <div v-html="descriptionHtml" />
       </el-collapse-item>
 
+      <!-- <el-collapse-item name="attachments">
+        <template v-slot:title>
+          <span>Attachments</span>
+          <i v-show="isBaseInfoLoading" class="issue-status el-icon el-icon-loading" />
+        </template>
+        <template v-for="attachment in get(issueData.fields, 'attachment', [])">
+          <div v-if="attachment.mimeType === 'image/png'" :key="attachment.id" class="attachments-item">
+            <el-image :src="attachment.content" fit="cover" :alt="attachment.filename" :data-origin-src="attachment.content" />
+          </div>
+        </template>
+      </el-collapse-item> -->
+
       <el-collapse-item name="timeTracking">
         <template v-slot:title>
           <span>Time Tracking</span>
@@ -208,7 +220,7 @@
           </el-table-column>
           <el-table-column prop="timeSpent" label="Time Spent" width="160" />
         </el-table>
-        <el-button v-show="!isWorklogLoading" type="text" icon="el-icon-circle-plus" size="mini" @click="worklogDialogVisible = true">
+        <el-button v-show="!isWorklogLoading" type="text" icon="el-icon-circle-plus" @click="worklogDialogVisible = true">
           Add worklog
         </el-button>
       </el-collapse-item>
@@ -358,6 +370,7 @@ export default {
           'reporter',
           'created',
           'updated',
+          // 'attachment',
           'customfield_10710',
           'fixVersions',
           'customfield_10208',
@@ -431,6 +444,7 @@ export default {
       this.$events.emit('my-issues:reload')
       this.$message({ message: 'Transition issue success.', type: 'success' })
       this.getIssueBaseInfo()
+      this.getTransitionsList()
       this.isTransitionDisabled = false
     },
     formatDate(date, _default, formatter = 'YYYY-MM-DD HH:mm:ss') {
@@ -480,6 +494,12 @@ export default {
   }
   .issue-links-title {
     margin: 5px;
+  }
+  .attachments-item {
+    float: left;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
   }
 }
 </style>
